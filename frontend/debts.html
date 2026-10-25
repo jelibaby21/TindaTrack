@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Tinda Track - Utang</title>
+</head>
+<body>
+    <h1>Utang Management</h1>
+
+    <form id="debtForm">
+        <input id="customer_id" type="number" placeholder="Customer ID" required>
+        <input id="amount" type="number" step="0.01" placeholder="Debt Amount" required>
+        <input id="due_date" type="date" required>
+        <button type="submit">Record Debt</button>
+    </form>
+
+    <br>
+
+    <table border="1">
+        <thead>
+            <tr>
+                <th>ID</th><th>Customer</th><th>Debt</th>
+                <th>Paid</th><th>Balance</th><th>Status</th>
+                <th>Due Date</th><th>Payment</th>
+            </tr>
+        </thead>
+        <tbody id="debtTable"></tbody>
+    </table>
+
+    <script src="js/debts.js"></script>
+</body>
+</html>

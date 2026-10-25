@@ -11,9 +11,13 @@ const userRoutes = require('./routes/userRoutes');
 
 const reportRoutes = require('./routes/reportRoutes');
 
+const debtRoutes = require('./routes/debtRoutes');
+
 app.use('/api', userRoutes);
 
 app.use('/api/reports', reportRoutes);
+
+app.use('/api/debts', debtRoutes);
 
 app.get('/', (req, res) => {
     res.send('Tinda Track Backend is Running!');

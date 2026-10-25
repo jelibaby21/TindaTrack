@@ -83,7 +83,7 @@ CREATE TABLE `customers` (
   `address` varchar(255) DEFAULT NULL,
   `status` varchar(20) DEFAULT 'Active',
   PRIMARY KEY (`customer_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -92,7 +92,7 @@ CREATE TABLE `customers` (
 
 LOCK TABLES `customers` WRITE;
 /*!40000 ALTER TABLE `customers` DISABLE KEYS */;
-INSERT INTO `customers` VALUES (1,'Juan Dela Cruz','09111111111','Dumaguete City','Active'),(2,'Maria Santos','09222222222','Dumaguete City','Active'),(3,'Pedro Garcia','09333333333','Dumaguete City','Active'),(4,'Ana Reyes','09444444444','Dumaguete City','Active'),(5,'Gabbi Garcia','09555555555','Dumaguete City','Active');
+INSERT INTO `customers` VALUES (1,'Juan Dela Cruz','09111111111','Dumaguete City','Active'),(2,'Maria Santos','09222222222','Dumaguete City','Active'),(3,'Pedro Garcia','09333333333','Dumaguete City','Active'),(4,'Ana Reyes','09444444444','Dumaguete City','Active'),(5,'Gabbi Garcia','09555555555','Dumaguete City','Active'),(6,'Yana Tan','09123456789','Dumaguete','Active');
 /*!40000 ALTER TABLE `customers` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -111,7 +111,7 @@ CREATE TABLE `debt_payments` (
   PRIMARY KEY (`payment_id`),
   KEY `debt_id` (`debt_id`),
   CONSTRAINT `debt_payments_ibfk_1` FOREIGN KEY (`debt_id`) REFERENCES `debts` (`debt_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -133,17 +133,19 @@ DROP TABLE IF EXISTS `debts`;
 CREATE TABLE `debts` (
   `debt_id` int NOT NULL AUTO_INCREMENT,
   `customer_id` int NOT NULL,
-  `sale_id` int NOT NULL,
-  `debt_date` date NOT NULL,
+  `sale_id` int DEFAULT NULL,
+  `debt_date` date NOT NULL DEFAULT (curdate()),
   `due_date` date NOT NULL,
   `amount` decimal(10,2) NOT NULL,
-  `status` varchar(20) DEFAULT 'Unpaid',
+  `amount_paid` decimal(10,2) NOT NULL DEFAULT '0.00',
+  `balance` decimal(10,2) NOT NULL DEFAULT '0.00',
+  `status` varchar(20) DEFAULT 'UNPAID',
   PRIMARY KEY (`debt_id`),
   KEY `customer_id` (`customer_id`),
   KEY `sale_id` (`sale_id`),
   CONSTRAINT `debts_ibfk_1` FOREIGN KEY (`customer_id`) REFERENCES `customers` (`customer_id`),
   CONSTRAINT `debts_ibfk_2` FOREIGN KEY (`sale_id`) REFERENCES `sales` (`sale_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -493,4 +495,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2026-10-25 19:05:31
+-- Dump completed on 2026-10-26  0:37:19
