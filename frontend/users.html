@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Tinda Track - Users</title>
+</head>
+<body>
+
+    <h1>User Management</h1>
+
+    <h2>Add User</h2>
+
+    <form id="userForm">
+
+        <input
+            type="text"
+            id="username"
+            placeholder="Username"
+            required
+        >
+
+        <input
+            type="text"
+            id="full_name"
+            placeholder="Full Name"
+            required
+        >
+
+        <input
+            type="number"
+            id="role_id"
+            placeholder="Role ID"
+            required
+        >
+
+        <input
+            type="text"
+            id="status"
+            placeholder="Status"
+            value="Active"
+            required
+        >
+
+        <button type="submit">Add User</button>
+
+    </form>
+
+    <h2>Users</h2>
+
+    <table border="1">
+
+        <thead>
+            <tr>
+                <th>User ID</th>
+                <th>Username</th>
+                <th>Full Name</th>
+                <th>Role</th>
+                <th>Status</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+
+        <tbody id="userTable">
+        </tbody>
+
+    </table>
+
+    <script src="js/users.js"></script>
+
+</body>
+</html>
