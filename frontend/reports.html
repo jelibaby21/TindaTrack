@@ -28,6 +28,26 @@
 
     </table>
 
+        <h2>Debts + Payments</h2>
+
+    <p>This report uses LEFT JOIN and RIGHT JOIN combined with UNION (FULL OUTER JOIN equivalent).</p>
+
+    <button onclick="loadDebtReport()">Load Report</button>
+
+    <table border="1">
+        <thead>
+            <tr>
+                <th>Debt ID</th>
+                <th>Customer</th>
+                <th>Amount</th>
+                <th>Paid</th>
+                <th>Balance</th>
+                <th>Payment</th>
+            </tr>
+        </thead>
+        <tbody id="debtReport"></tbody>
+    </table>
+
     <script src="js/reports.js"></script>
 
 </body>
