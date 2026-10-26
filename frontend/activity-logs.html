@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Tinda Track - Activity Logs</title>
+</head>
+
+<body>
+    <h1>Activity Logs</h1>
+
+    <table border="1">
+        <thead>
+            <tr>
+                <th>Log ID</th>
+                <th>User</th>
+                <th>Action</th>
+                <th>Description</th>
+                <th>Date</th>
+            </tr>
+        </thead>
+        <tbody id="logTable"></tbody>
+    </table>
+
+    <script>
+        fetch('http://localhost:3000/api/activity-logs')
+            .then(response => response.json())
+            .then(logs => {
+                const table = document.getElementById('logTable');
+
+                logs.forEach(log => {
+                    table.innerHTML += `
+                        <tr>
+                            <td>${log.log_id}</td>
+                            <td>${log.username || 'Unknown'}</td>
+                            <td>${log.action}</td>
+                            <td>${log.description || ''}</td>
+                            <td>${log.log_date}</td>
+                        </tr>
+                    `;
+                });
+            })
+            .catch(error => console.error('Error:', error));
+    </script>
+</body>
+
+</html>
