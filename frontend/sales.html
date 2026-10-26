@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Tinda Track - Sales</title>
+</head>
+<body>
+  <h1>Sales Management</h1>
+
+  <form id="salesForm">
+    <label for="customer_id">Customer:</label>
+    <select id="customer_id">
+      <option value="">Walk-in Customer</option>
+    </select>
+
+    <br><br>
+
+    <label for="user_id">User ID:</label>
+    <input id="user_id" type="number" min="1" required>
+
+    <br><br>
+
+    <label for="sale_date">Sale Date:</label>
+    <input id="sale_date" type="date" required>
+
+    <br><br>
+
+    <label for="total_amount">Total Amount:</label>
+    <input id="total_amount" type="number" min="0.01" step="0.01" required>
+
+    <br><br>
+
+    <label for="payment_type">Payment Type:</label>
+    <select id="payment_type" required>
+      <option value="">Select Payment Type</option>
+      <option value="Cash">Cash</option>
+      <option value="GCash">GCash</option>
+      <option value="Credit">Credit</option>
+    </select>
+
+    <br><br>
+
+    <button type="submit">Record Sale</button>
+  </form>
+
+  <h2>Sales Records</h2>
+
+  <table border="1">
+    <thead>
+      <tr>
+        <th>Sale ID</th>
+        <th>Customer</th>
+        <th>User ID</th>
+        <th>Date</th>
+        <th>Total Amount</th>
+        <th>Payment Type</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody id="salesTable"></tbody>
+  </table>
+
+  <script src="js/sales.js"></script>
+</body>
+</html>
