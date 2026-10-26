@@ -1,3 +1,4 @@
+
 const express = require('express');
 const db = require('./config/db');
 
@@ -8,14 +9,14 @@ app.use(express.json());
 app.use(express.static('../frontend'));
 
 const userRoutes = require('./routes/userRoutes');
-
 const reportRoutes = require('./routes/reportRoutes');
+const inventoryRoutes = require('./routes/inventoryRoutes');
 
 const debtRoutes = require('./routes/debtRoutes');
 
 app.use('/api', userRoutes);
-
 app.use('/api/reports', reportRoutes);
+app.use('/api/inventory', inventoryRoutes);
 
 app.use('/api/debts', debtRoutes);
 
