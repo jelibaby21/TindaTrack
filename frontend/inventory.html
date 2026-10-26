@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Tinda Track - Inventory</title>
+</head>
+<body>
+    <h1>Inventory Management</h1>
+
+    <form id="inventoryForm">
+        <input id="product_id" type="number" placeholder="Product ID" required>
+        <input id="quantity" type="number" placeholder="Quantity" required>
+        <input id="expiration_date" type="date">
+        <button type="submit">Add Inventory</button>
+    </form>
+
+    <br>
+
+    <table border="1">
+        <thead>
+            <tr>
+                <th>Batch</th><th>Product</th><th>Quantity</th>
+                <th>Expiration</th><th>Status</th><th>Action</th>
+            </tr>
+        </thead>
+        <tbody id="inventoryTable"></tbody>
+    </table>
+
+    <script src="js/inventory.js"></script>
+</body>
+</html>
