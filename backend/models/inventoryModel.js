@@ -19,14 +19,15 @@ const getAll = (callback) => {
 const add = (item, callback) => {
     const sql = `
         INSERT INTO inventory_batches
-        (product_id, quantity, expiration_date, status)
-        VALUES (?, ?, ?, ?)
+        (product_id, quantity, received_date, expiration_date, status)
+        VALUES (?, ?, CURDATE(), ?, ?)
     `;
+
     db.query(sql, [
         item.product_id,
         item.quantity,
         item.expiration_date,
-        item.status || 'Normal'
+        item.status || 'Active'
     ], callback);
 };
 
