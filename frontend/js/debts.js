@@ -1,5 +1,9 @@
 const API = 'http://localhost:3000/api/debts';
 
+function formatDate(value) {
+    return value ? new Date(value).toLocaleDateString('en-CA') : '';
+}
+
 function loadDebts() {
     fetch(API)
         .then(response => response.json())
@@ -16,12 +20,35 @@ function loadDebts() {
                         <td>${d.amount_paid}</td>
                         <td>${d.balance}</td>
                         <td>${d.status}</td>
-                        <td>${d.due_date || ''}</td>
+                        <td>${formatDate(d.due_date)}</td>
                         <td>
                             <button onclick="makePayment(${d.debt_id}, ${d.balance})">
                                 Pay
                             </button>
                         </td>
+                    </tr>
+                `;
+            });
+        })
+        .catch(error => console.error('Error:', error));
+}
+
+function loadAlerts() {
+    fetch(`${API}/alerts`)
+        .then(response => response.json())
+        .then(alerts => {
+            const table = document.getElementById('alertTable');
+            table.innerHTML = '';
+
+            alerts.forEach(a => {
+                table.innerHTML += `
+                    <tr>
+                        <td>${a.debt_id}</td>
+                        <td>${a.full_name}</td>
+                        <td>${a.balance}</td>
+                        <td>${formatDate(a.due_date)}</td>
+                        <td>${a.alert_type}</td>
+                        <td>${a.days_overdue > 0 ? a.days_overdue : ''}</td>
                     </tr>
                 `;
             });
@@ -48,6 +75,7 @@ document.getElementById('debtForm').addEventListener('submit', event => {
         alert(data.message);
         document.getElementById('debtForm').reset();
         loadDebts();
+        loadAlerts();
     });
 });
 
@@ -65,7 +93,9 @@ function makePayment(id, balance) {
     .then(data => {
         alert(data.message);
         loadDebts();
+        loadAlerts();
     });
 }
 
 loadDebts();
+loadAlerts();

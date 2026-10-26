@@ -2,9 +2,12 @@ const Debt = require('../models/debtModel');
 const db = require('../config/db');
 
 const getAll = (req, res) => {
-    Debt.getAll((err, results) => {
+    Debt.markOverdue((err) => {
         if (err) return res.status(500).json({ message: 'Database error' });
-        res.status(200).json(results);
+        Debt.getAll((err, results) => {
+            if (err) return res.status(500).json({ message: 'Database error' });
+            res.status(200).json(results);
+        });
     });
 };
 
@@ -100,4 +103,14 @@ const report = (req, res) => {
     });
 };
 
-module.exports = { getAll, add, payment, remove, report };
+const getAlerts = (req, res) => {
+    Debt.markOverdue((err) => {
+        if (err) return res.status(500).json({ message: 'Database error' });
+        Debt.getAlerts((err, results) => {
+            if (err) return res.status(500).json({ message: 'Database error' });
+            res.status(200).json(results);
+        });
+    });
+}; 
+
+module.exports = { getAll, add, payment, remove, report, getAlerts };

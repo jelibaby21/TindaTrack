@@ -43,7 +43,7 @@ const pay = (id, payment, callback) => {
             status =
                 CASE
                     WHEN amount - (amount_paid + ?) <= 0 THEN 'PAID'
-                    ELSE 'UNPAID'
+                    ELSE 'PARTIAL'
                 END,
             amount_paid = amount_paid + ?
         WHERE debt_id = ?
@@ -102,4 +102,33 @@ const report = (callback) => {
     db.query(sql, callback);
 };
 
-module.exports = { getAll, add, pay, remove, report };
+const markOverdue = (callback) => {
+    const sql = `
+        UPDATE debts
+        SET status = 'OVERDUE'
+        WHERE due_date < CURDATE()
+          AND balance > 0
+          AND status <> 'CANCELLED'
+    `;
+    db.query(sql, callback);
+};
+
+const getAlerts = (callback) => {
+    const sql = `
+        SELECT d.debt_id, c.customer_name AS full_name, d.balance, d.due_date,
+               CASE
+                   WHEN d.due_date < CURDATE() THEN 'OVERDUE'
+                   ELSE 'DUE SOON'
+               END AS alert_type,
+               DATEDIFF(CURDATE(), d.due_date) AS days_overdue
+        FROM debts d
+        INNER JOIN customers c ON d.customer_id = c.customer_id
+        WHERE d.balance > 0
+          AND d.status <> 'CANCELLED'
+          AND d.due_date <= DATE_ADD(CURDATE(), INTERVAL 3 DAY)
+        ORDER BY d.due_date
+    `;
+    db.query(sql, callback);
+};
+
+module.exports = { getAll, add, pay, remove, report, markOverdue, getAlerts };

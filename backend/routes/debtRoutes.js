@@ -3,9 +3,11 @@ const router = express.Router();
 const controller = require('../controllers/debtController');
 
 router.get('/', controller.getAll);
+router.get('/alerts', controller.getAlerts);
 router.post('/', controller.add);
 router.put('/:id/payment', controller.payment);
 router.delete('/:id', controller.remove);
 router.get('/report/join', controller.report);
+
 
 module.exports = router;
