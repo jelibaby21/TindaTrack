@@ -1,16 +1,21 @@
+
 const ActivityLog = require('../models/activityLogModel');
 
 const getLogs = (req, res) => {
     ActivityLog.getLogs((err, results) => {
         if (err) {
-            return res.status(500).json({ message: 'Database error' });
+            console.error('Activity logs query failed:', err);
+            return res.status(500).json({
+                message: 'Database error'
+            });
         }
+
         res.status(200).json(results);
     });
 };
 
 const addLog = (req, res) => {
-    const { user_id, action, description } = req.body;
+    const { user_id, action, table_name, record_id } = req.body;
 
     if (!user_id || !action) {
         return res.status(400).json({
@@ -19,9 +24,10 @@ const addLog = (req, res) => {
     }
 
     ActivityLog.addLog(
-        { user_id, action, description },
+        { user_id, action, table_name, record_id },
         (err, result) => {
             if (err) {
+                console.error('Adding activity log failed:', err);
                 return res.status(500).json({
                     message: 'Database error'
                 });
