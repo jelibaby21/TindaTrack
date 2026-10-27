@@ -21,9 +21,11 @@ const loadUsers = () => {
         <td>${user.status}</td>
         <td>
             <button onclick="editUser(${user.user_id})">Edit</button>
-            <button onclick="deactivateUser(${user.user_id})">
-                Deactivate
-            </button>
+
+${user.status === 'Active'
+                        ? `<button onclick="changeStatus(${user.user_id}, 'Inactive')">Deactivate</button>`
+                        : `<button onclick="changeStatus(${user.user_id}, 'Active')">Activate</button>`
+                    }
         </td>
     </tr>
 `;
@@ -45,10 +47,16 @@ document.getElementById('userForm').addEventListener('submit', (event) => {
 
     const user = {
         username: document.getElementById('username').value,
+        password: prompt('Enter a password for this user:'),
         full_name: document.getElementById('full_name').value,
         role_id: document.getElementById('role_id').value,
         status: document.getElementById('status').value
     };
+
+    if (!user.password) {
+        alert('Password is required.');
+        return;
+    }
 
     fetch('http://localhost:3000/api/users', {
 
@@ -62,21 +70,21 @@ document.getElementById('userForm').addEventListener('submit', (event) => {
 
     })
 
-    .then(response => response.json())
+        .then(response => response.json())
 
-    .then(data => {
+        .then(data => {
 
-        alert(data.message);
+            alert(data.message);
 
-        document.getElementById('userForm').reset();
+            document.getElementById('userForm').reset();
 
-        loadUsers();
+            loadUsers();
 
-    })
+        })
 
-    .catch(error => {
-        console.error('Error:', error);
-    });
+        .catch(error => {
+            console.error('Error:', error);
+        });
 
 });
 
@@ -104,47 +112,39 @@ function editUser(id) {
         })
 
     })
-    .then(response => response.json())
-    .then(data => {
+        .then(response => response.json())
+        .then(data => {
 
-        alert(data.message);
+            alert(data.message);
 
-        loadUsers();
+            loadUsers();
 
-    })
-    .catch(error => {
-        console.error('Error:', error);
-    });
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
 }
 
-function deactivateUser(id) {
+function changeStatus(id, status) {
+    const action = status === 'Active' ? 'activate' : 'deactivate';
 
-    if (!confirm('Deactivate this user?')) {
+    if (!confirm(`Are you sure you want to ${action} this user?`)) {
         return;
     }
 
     fetch(`http://localhost:3000/api/users/${id}`, {
-
         method: 'PUT',
-
         headers: {
             'Content-Type': 'application/json'
         },
-
-        body: JSON.stringify({
-            status: 'Inactive'
+        body: JSON.stringify({ status: status })
+    })
+        .then(response => response.json())
+        .then(data => {
+            alert(data.message);
+            loadUsers();
         })
-
-    })
-    .then(response => response.json())
-    .then(data => {
-
-        alert(data.message);
-
-        loadUsers();
-
-    })
-    .catch(error => {
-        console.error('Error:', error);
-    });
+        .catch(error => {
+            console.error('Error:', error);
+        });
 }
