@@ -6,6 +6,7 @@
 </head>
 
 <body>
+
     <h1>Activity Logs</h1>
 
     <table border="1">
@@ -18,6 +19,7 @@
                 <th>Date</th>
             </tr>
         </thead>
+
         <tbody id="logTable"></tbody>
     </table>
 
@@ -25,22 +27,27 @@
         fetch('http://localhost:3000/api/activity-logs')
             .then(response => response.json())
             .then(logs => {
+
                 const table = document.getElementById('logTable');
 
                 logs.forEach(log => {
+
                     table.innerHTML += `
                         <tr>
                             <td>${log.log_id}</td>
                             <td>${log.username || 'Unknown'}</td>
                             <td>${log.action}</td>
-                            <td>${log.description || ''}</td>
-                            <td>${log.log_date}</td>
+                            <td>${log.table_name ? log.table_name + ' #' + (log.record_id || '') : ''}</td>
+                            <td>${log.timestamp || ''}</td>
                         </tr>
                     `;
+
                 });
+
             })
             .catch(error => console.error('Error:', error));
     </script>
+
 </body>
 
 </html>

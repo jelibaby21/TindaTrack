@@ -44,11 +44,12 @@ document.getElementById('userForm').addEventListener('submit', (event) => {
     event.preventDefault();
 
     const user = {
-        username: document.getElementById('username').value,
-        full_name: document.getElementById('full_name').value,
-        role_id: document.getElementById('role_id').value,
-        status: document.getElementById('status').value
-    };
+    username: document.getElementById('username').value,
+    password: document.getElementById('password').value,
+    full_name: document.getElementById('full_name').value,
+    role_id: document.getElementById('role_id').value,
+    status: document.getElementById('status').value
+};
 
     fetch('http://localhost:3000/api/users', {
 

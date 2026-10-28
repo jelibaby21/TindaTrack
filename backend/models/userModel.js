@@ -18,14 +18,19 @@ const getAllUsers = (callback) => {
 
 const addUser = (user, callback) => {
     const sql = `
-        INSERT INTO users
-        (username, full_name, role_id, status)
-        VALUES (?, ?, ?, ?)
+        INSERT INTO users (username, password, full_name, role_id, status)
+        VALUES (?, ?, ?, ?, ?)
     `;
 
     db.query(
         sql,
-        [user.username, user.full_name, user.role_id, user.status],
+        [
+            user.username,
+            user.password,
+            user.full_name,
+            user.role_id,
+            user.status
+        ],
         callback
     );
 };

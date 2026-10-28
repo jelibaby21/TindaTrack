@@ -14,11 +14,12 @@ const getUsers = (req, res) => {
 
 const addUser = (req, res) => {
     const user = {
-        username: req.body.username,
-        full_name: req.body.full_name,
-        role_id: req.body.role_id,
-        status: req.body.status
-    };
+    username: req.body.username,
+    password: req.body.password,
+    full_name: req.body.full_name,
+    role_id: req.body.role_id,
+    status: req.body.status
+};
 
     userModel.addUser(user, (err, result) => {
         if (err) {
