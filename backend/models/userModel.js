@@ -1,8 +1,8 @@
 const db = require('../config/db');
 
-const getAllUsers = (callback) => {
+const getUsers = (callback) => {
     const sql = `
-        SELECT 
+        SELECT
             u.user_id,
             u.username,
             u.full_name,
@@ -16,43 +16,61 @@ const getAllUsers = (callback) => {
     db.query(sql, callback);
 };
 
-const addUser = (user, callback) => {
+const addUser = (data, callback) => {
     const sql = `
-        INSERT INTO users (username, password, full_name, role_id, status)
-        VALUES (?, ?, ?, ?, ?)
+        INSERT INTO users
+        (username, password, full_name, role_id)
+        VALUES (?, ?, ?, ?)
     `;
 
     db.query(
         sql,
         [
-            user.username,
-            user.password,
-            user.full_name,
-            user.role_id,
-            user.status
+            data.username,
+            data.password,
+            data.full_name,
+            data.role_id
         ],
         callback
     );
 };
 
-const updateUser = (id, user, callback) => {
-
+const updateUser = (userId, data, callback) => {
     const sql = `
         UPDATE users
-        SET full_name = COALESCE(?, full_name),
-            status = COALESCE(?, status)
+        SET username = ?,
+            full_name = ?,
+            role_id = ?,
+            status = ?
         WHERE user_id = ?
     `;
 
     db.query(
         sql,
-        [user.full_name || null, user.status || null, id],
+        [
+            data.username,
+            data.full_name,
+            data.role_id,
+            data.status,
+            userId
+        ],
         callback
     );
 };
 
+const deactivateUser = (userId, callback) => {
+    const sql = `
+        UPDATE users
+        SET status = 'Inactive'
+        WHERE user_id = ?
+    `;
+
+    db.query(sql, [userId], callback);
+};
+
 module.exports = {
-    getAllUsers,
+    getUsers,
     addUser,
-    updateUser
+    updateUser,
+    deactivateUser
 };

@@ -1,4 +1,5 @@
 const ActivityLog = require('../models/activityLogModel');
+
 console.log('ACTIVITY LOG CONTROLLER LOADED');
 
 const getLogs = (req, res) => {
@@ -43,13 +44,14 @@ const addLog = (req, res) => {
         (err, result) => {
 
             if (err) {
-    console.log(err);
+                console.log('ACTIVITY LOG ERROR:', err);
 
-    return res.status(500).json({
-        message: 'Database error',
-        error: err.message
-    });
-}
+                return res.status(500).json({
+                    message: 'Database error',
+                    error: err.message
+                });
+            }
+
             res.status(201).json({
                 message: 'Activity logged',
                 log_id: result.insertId
