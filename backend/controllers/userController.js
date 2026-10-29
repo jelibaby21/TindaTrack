@@ -1,88 +1,120 @@
-
-const userModel = require('../models/userModel');
-const ActivityLog = require('../models/activityLogModel');
+const User = require('../models/userModel');
 
 const getUsers = (req, res) => {
-    userModel.getAllUsers((err, results) => {
+    User.getUsers((err, results) => {
+
         if (err) {
+            console.log('USER ERROR:', err);
+
             return res.status(500).json({
-                error: 'Failed to get users'
+                message: 'Database error',
+                error: err.message
             });
         }
 
-        res.json(results);
+        res.status(200).json(results);
     });
 };
 
 const addUser = (req, res) => {
-    const user = {
-        username: req.body.username,
-        password: req.body.password,
-        full_name: req.body.full_name,
-        role_id: req.body.role_id,
-        status: req.body.status
-    };
+    const {
+        username,
+        password,
+        full_name,
+        role_id
+    } = req.body;
 
-    userModel.addUser(user, (err, result) => {
-        if (err) {
-            console.error('Add user database error:', err);
+    if (!username || !password || !full_name || !role_id) {
+        return res.status(400).json({
+            message: 'All fields are required'
+        });
+    }
 
-            res.status(500).json({
-                error: 'Failed to add user'
-            });
-        }
+    User.addUser(
+        {
+            username,
+            password,
+            full_name,
+            role_id
+        },
+        (err, result) => {
 
-        ActivityLog.addLog({
-            user_id: 1,
-            action: 'Added User',
-            table_name: 'users',
-            record_id: result.insertId
-        }, (logErr) => {
-            if (logErr) {
-                console.error('Failed to log added user:', logErr);
+            if (err) {
+                console.log('ADD USER ERROR:', err);
+
+                return res.status(500).json({
+                    message: 'Database error',
+                    error: err.message
+                });
             }
 
             res.status(201).json({
                 message: 'User added successfully',
                 user_id: result.insertId
             });
-        });
-    });
+        }
+    );
 };
 
 const updateUser = (req, res) => {
-    userModel.updateUser(
-        req.params.id,
-        req.body,
+    const userId = req.params.id;
+
+    const {
+        username,
+        full_name,
+        role_id,
+        status
+    } = req.body;
+
+    User.updateUser(
+        userId,
+        {
+            username,
+            full_name,
+            role_id,
+            status
+        },
         (err, result) => {
+
             if (err) {
-                console.error(err);
+                console.log('UPDATE USER ERROR:', err);
 
                 return res.status(500).json({
-                    message: 'Failed to update user'
+                    message: 'Database error',
+                    error: err.message
                 });
             }
 
-            ActivityLog.addLog({
-                user_id: 1,
-                action: 'Updated User',
-                table_name: 'users',
-                record_id: Number(req.params.id)
-            }, (logErr) => {
-                if (logErr) {
-                    console.error('Failed to log updated user:', logErr);
-                }
-
-                res.json({
-                    message: 'User updated successfully'
-                });
+            res.json({
+                message: 'User updated successfully'
             });
         }
     );
 };
 
+const deactivateUser = (req, res) => {
+    const userId = req.params.id;
+
+    User.deactivateUser(userId, (err, result) => {
+
+        if (err) {
+            console.log('DEACTIVATE USER ERROR:', err);
+
+            return res.status(500).json({
+                message: 'Database error',
+                error: err.message
+            });
+        }
+
+        res.json({
+            message: 'User deactivated successfully'
+        });
+    });
+};
+
 module.exports = {
     getUsers,
     addUser,
-    updateUser
+    updateUser,
+    deactivateUser
 };

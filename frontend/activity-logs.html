@@ -6,6 +6,7 @@
 </head>
 
 <body>
+
     <h1>Activity Logs</h1>
 
     <table border="1">
@@ -19,67 +20,36 @@
             </tr>
         </thead>
 
-        <tbody id="logTable">
-            <tr>
-                <td colspan="5">Loading activity logs...</td>
-            </tr>
-        </tbody>
+        <tbody id="logTable"></tbody>
     </table>
 
     <script>
         fetch('http://localhost:3000/api/activity-logs')
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Failed to load activity logs');
-                }
-                return response.json();
-            })
+            .then(response => response.json())
             .then(logs => {
-                const table = document.getElementById('logTable');
-                table.innerHTML = '';
 
-                if (logs.length === 0) {
-                    table.innerHTML = `
-                        <tr>
-                            <td colspan="5">No activity logs found.</td>
-                        </tr>
-                    `;
-                    return;
-                }
+                const table = document.getElementById('logTable');
 
                 logs.forEach(log => {
-                    const description = [
-                        log.table_name ? 'Table: ' + log.table_name : '',
-                        log.record_id != null
-                            ? 'Record ID: ' + log.record_id
-                            : ''
-                    ].filter(Boolean).join(', ');
-
-                    const date = log.timestamp
-                        ? new Date(log.timestamp).toLocaleString()
-                        : '';
 
                     table.innerHTML += `
                         <tr>
                             <td>${log.log_id}</td>
                             <td>${log.username || 'Unknown'}</td>
                             <td>${log.action}</td>
-                            <td>${description}</td>
-                            <td>${date}</td>
+                            <td>${log.description || ''}</td>
+                            <td>${log.log_date || ''}</td>
                         </tr>
                     `;
+
                 });
+
             })
             .catch(error => {
-                console.error('Error loading activity logs:', error);
-
-                document.getElementById('logTable').innerHTML = `
-                    <tr>
-                        <td colspan="5">Failed to load activity logs.</td>
-                    </tr>
-                `;
+                console.error('Error:', error);
             });
     </script>
+
 </body>
 
 </html>
