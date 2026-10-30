@@ -1,4 +1,4 @@
-const Purchase = require('../models/purchaseModel');
+const Purchase = require('./models/purchaseModel');
 
 const getAll = (req, res) => {
     Purchase.getAll((err, results) => {
