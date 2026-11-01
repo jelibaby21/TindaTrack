@@ -55,14 +55,14 @@ Generate reports for users, sales, sales details, inventory, debts, purchases, a
 
 5. Group Members and Ownership Matrix
 
-| Member           | Assigned Tables                      | Backend Module                         | Frontend Screen             | JOIN Report        |
-| ---------------- | ------------------------------------ | -------------------------------------- | --------------------------- | ------------------ |
-| Gianne Cadayona  | users, roles, activity_logs          | User Management                        | User Management             | —                  |
-| Angel Guinanas   | products, categories, units          | Product Management                     | Product Management          | —                  |
-| Pritz Cabugnason | inventory_batches, stock_movements   | Inventory Management                   | Inventory Management        | —                  |
-| Jener Cabual     | suppliers, purchases, purchase_items | Purchase Management                    | Purchase Management         | —                  |
-| Algie Dorias     | customers, sales, sale_items         | Customer and Sales                     | Customer and Sales          | —                  |
-| Jellica Canoy    | debts, debt_payments                 | Debt Management and System Integration | Debt Management and Reports | All 6 JOIN Reports |
+| Member          |               Assigned Tables        |        Backend Module                 | Frontend Screen              |   JOIN Report      |       Unique Feature           |
+
+| Gianne Cadayona |        users, roles, activity_logs   |          User Management              |       User Management        |                    | Co-owner: Utang Management     |
+| Angel Guinanas  |    products, categories, units       |          Product Management           |       Product Management     |                    |
+| Pritz Cabugnason|   inventory_batches, stock_movements |          Inventory Management         |     Inventory Management     |                    |
+| Jener Cabual    | suppliers, purchases, purchase_items |             Purchase Management       |     Purchase Management      |                    |
+| Algie Dorias    |     customers, sales, sale_items     |          Customer and Sales           |     Customer and Sales       |                    |
+| Jellica Canoy   |      debts, debt_payments            | Debt Management and System Integration | Debt Management and Reports | All 6 JOIN Reports | Primary Owner: Utang Management |
 
 6. Database Information
 
