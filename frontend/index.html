@@ -1,17 +1,108 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
+
 <head>
-    <title>Tinda Track</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tinda Track - Dashboard</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            background-color: #f4f6f9;
+            color: #333;
+        }
+
+        header {
+            background-color: #176b45;
+            color: white;
+            padding: 25px;
+            text-align: center;
+        }
+
+        header h1 {
+            margin: 0;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 30px auto;
+            padding: 20px;
+        }
+
+        .menu {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 15px;
+        }
+
+        .menu a {
+            display: block;
+            background-color: white;
+            color: #176b45;
+            text-decoration: none;
+            padding: 22px;
+            border-radius: 8px;
+            text-align: center;
+            font-weight: bold;
+            border: 1px solid #ddd;
+        }
+
+        .menu a:hover {
+            background-color: #176b45;
+            color: white;
+        }
+
+        footer {
+            text-align: center;
+            padding: 20px;
+            color: #666;
+        }
+    </style>
 </head>
+
 <body>
 
-    <h1>Tinda Track</h1>
-    <p>Inventory and Utang Management System</p>
+    <header>
+        <h1>Tinda Track</h1>
+        <p>Inventory and Utang Management System for Sari-Sari Stores</p>
+    </header>
 
-    <a href="users.html">User Management</a>
-    <br><br>
+    <div class="container">
 
-<a href="reports.html">View Reports</a>
+        <h2>Welcome to Tinda Track!</h2>
+        <p>Select a module below to manage your sari-sari store.</p>
+
+        <div class="menu">
+
+            <a href="users.html">User Management</a>
+
+            <a href="customers.html">Customer Management</a>
+
+            <a href="products.html">Product Management</a>
+
+            <a href="inventory.html">Inventory Management</a>
+
+            <a href="sales.html">Sales Management</a>
+
+            <a href="debts.html">Debt / Utang Management</a>
+
+            <a href="purchases.html">Purchase Management</a>
+
+            <a href="activity-logs.html">Activity Logs</a>
+
+            <a href="reports.html">View Reports</a>
+
+        </div>
+
+    </div>
+
+    <footer>
+        <p>Tinda Track | Inventory and Utang Management System</p>
+    </footer>
 
 </body>
+
 </html>
+
