@@ -24,30 +24,51 @@
     </table>
 
     <script>
-        fetch('http://localhost:3000/api/activity-logs')
-            .then(response => response.json())
-            .then(logs => {
+        const loadActivityLogs = () => {
+            fetch('http://localhost:3000/api/activity-logs')
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Failed to load activity logs');
+                    }
 
-                const table = document.getElementById('logTable');
+                    return response.json();
+                })
+                .then(logs => {
+                    const table = document.getElementById('logTable');
+                    table.innerHTML = '';
 
-                logs.forEach(log => {
+                    logs.forEach(log => {
+                        const date = log.timestamp
+                            ? new Date(log.timestamp).toLocaleString('en-US', {
+                                month: '2-digit',
+                                day: '2-digit',
+                                year: 'numeric',
+                                hour: 'numeric',
+                                minute: '2-digit',
+                                hour12: true
+                            })
+                            : '';
 
-                    table.innerHTML += `
-                        <tr>
-                            <td>${log.log_id}</td>
-                            <td>${log.username || 'Unknown'}</td>
-                            <td>${log.action}</td>
-                            <td>${log.description || ''}</td>
-                            <td>${log.log_date || ''}</td>
-                        </tr>
-                    `;
+                        const description =
+                            `Table: ${log.table_name || ''}, Record ID: ${log.record_id || ''}`;
 
+                        table.innerHTML += `
+                            <tr>
+                                <td>${log.log_id}</td>
+                                <td>${log.username || 'Unknown'}</td>
+                                <td>${log.action}</td>
+                                <td>${description}</td>
+                                <td>${date}</td>
+                            </tr>
+                        `;
+                    });
+                })
+                .catch(error => {
+                    console.error('Error loading activity logs:', error);
                 });
+        };
 
-            })
-            .catch(error => {
-                console.error('Error:', error);
-            });
+        loadActivityLogs();
     </script>
 
 </body>

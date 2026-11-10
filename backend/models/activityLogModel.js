@@ -1,3 +1,4 @@
+
 const db = require('../config/db');
 
 const getLogs = (callback) => {
@@ -8,12 +9,11 @@ const getLogs = (callback) => {
             al.action,
             al.table_name,
             al.record_id,
-            al.description,
-            al.log_date
+            al.timestamp
         FROM activity_logs al
         INNER JOIN users u
             ON al.user_id = u.user_id
-        ORDER BY al.log_id ASC
+        ORDER BY al.log_id DESC
     `;
 
     db.query(sql, callback);
