@@ -1,88 +1,153 @@
 
-const userModel = require('../models/userModel');
+const User = require('../models/userModel');
 const ActivityLog = require('../models/activityLogModel');
 
 const getUsers = (req, res) => {
-    userModel.getAllUsers((err, results) => {
+    User.getAllUsers((err, results) => {
         if (err) {
+            console.log('USER ERROR:', err);
             return res.status(500).json({
-                error: 'Failed to get users'
+                message: 'Failed to get users',
+                error: err.message
             });
         }
 
-        res.json(results);
+        res.status(200).json(results);
     });
 };
 
 const addUser = (req, res) => {
+    const {
+        username,
+        password,
+        full_name,
+        role_id,
+        status
+    } = req.body;
+
+    if (!username || !password || !full_name || !role_id) {
+        return res.status(400).json({
+            message: 'All fields are required'
+        });
+    }
+
     const user = {
-        username: req.body.username,
-        password: req.body.password,
-        full_name: req.body.full_name,
-        role_id: req.body.role_id,
-        status: req.body.status
+        username,
+        password,
+        full_name,
+        role_id,
+        status: status || 'Active'
     };
 
-    userModel.addUser(user, (err, result) => {
+    User.addUser(user, (err, result) => {
         if (err) {
-            console.error('Add user database error:', err);
-
-            res.status(500).json({
-                error: 'Failed to add user'
+            console.log('ADD USER ERROR:', err);
+            return res.status(500).json({
+                message: 'Database error',
+                error: err.message
             });
         }
 
         ActivityLog.addLog({
-            user_id: 1,
+            user_id: req.body.logged_in_user_id,
             action: 'Added User',
             table_name: 'users',
             record_id: result.insertId
         }, (logErr) => {
             if (logErr) {
-                console.error('Failed to log added user:', logErr);
+                console.log('ADD USER LOG ERROR:', logErr);
             }
+        });
 
-            res.status(201).json({
-                message: 'User added successfully',
-                user_id: result.insertId
-            });
+        res.status(201).json({
+            message: 'User added successfully',
+            user_id: result.insertId
         });
     });
 };
 
 const updateUser = (req, res) => {
-    userModel.updateUser(
-        req.params.id,
-        req.body,
-        (err, result) => {
-            if (err) {
-                console.error(err);
+    const userId = req.params.id;
 
-                return res.status(500).json({
-                    message: 'Failed to update user'
-                });
-            }
+    const allowedFields = [
+        'username',
+        'full_name',
+        'role_id',
+        'status'
+    ];
 
-            ActivityLog.addLog({
-                user_id: 1,
-                action: 'Updated User',
-                table_name: 'users',
-                record_id: Number(req.params.id)
-            }, (logErr) => {
-                if (logErr) {
-                    console.error('Failed to log updated user:', logErr);
-                }
+    const updates = {};
 
-                res.json({
-                    message: 'User updated successfully'
-                });
+    allowedFields.forEach(field => {
+        if (req.body[field] !== undefined) {
+            updates[field] = req.body[field];
+        }
+    });
+
+    if (Object.keys(updates).length === 0) {
+        return res.status(400).json({
+            message: 'No valid fields provided'
+        });
+    }
+
+    User.updateUser(userId, updates, (err, result) => {
+        if (err) {
+            console.log('UPDATE USER ERROR:', err);
+            return res.status(500).json({
+                message: 'Database error',
+                error: err.message
             });
         }
-    );
+
+        ActivityLog.addLog({
+            user_id: req.body.logged_in_user_id,
+            action: 'Updated User',
+            table_name: 'users',
+            record_id: userId
+        }, (logErr) => {
+            if (logErr) {
+                console.log('UPDATE USER LOG ERROR:', logErr);
+            }
+        });
+
+        res.json({
+            message: 'User updated successfully'
+        });
+    });
+};
+
+const deactivateUser = (req, res) => {
+    const userId = req.params.id;
+
+    User.deactivateUser(userId, (err, result) => {
+        if (err) {
+            console.log('DEACTIVATE USER ERROR:', err);
+            return res.status(500).json({
+                message: 'Database error',
+                error: err.message
+            });
+        }
+
+        ActivityLog.addLog({
+            user_id: req.body.logged_in_user_id,
+            action: 'Deactivated User',
+            table_name: 'users',
+            record_id: userId
+        }, (logErr) => {
+            if (logErr) {
+                console.log('DEACTIVATE USER LOG ERROR:', logErr);
+            }
+        });
+
+        res.json({
+            message: 'User deactivated successfully'
+        });
+    });
 };
 
 module.exports = {
     getUsers,
     addUser,
-    updateUser
+    updateUser,
+    deactivateUser
 };

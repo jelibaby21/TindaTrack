@@ -10,11 +10,18 @@ const getLogs = (callback) => {
             a.action,
             a.table_name,
             a.record_id,
-            a.timestamp
+            CONCAT(
+                'Table: ',
+                a.table_name,
+                ', Record ID: ',
+                a.record_id
+            ) AS description,
+            a.timestamp,
+            a.timestamp AS log_date
         FROM activity_logs a
         LEFT JOIN users u
             ON a.user_id = u.user_id
-        ORDER BY a.log_id DESC
+        ORDER BY a.timestamp DESC
     `;
 
     db.query(sql, callback);
@@ -35,4 +42,7 @@ const addLog = (log, callback) => {
     ], callback);
 };
 
-module.exports = { getLogs, addLog };
+module.exports = {
+    getLogs,
+    addLog
+};

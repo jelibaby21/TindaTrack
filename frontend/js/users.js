@@ -1,3 +1,4 @@
+
 const loadUsers = () => {
 
     fetch('http://localhost:3000/api/users')
@@ -13,22 +14,22 @@ const loadUsers = () => {
             users.forEach(user => {
 
                 const row = `
-    <tr>
-        <td>${user.user_id}</td>
-        <td>${user.username}</td>
-        <td>${user.full_name}</td>
-        <td>${user.role_name}</td>
-        <td>${user.status}</td>
-        <td>
-            <button onclick="editUser(${user.user_id})">Edit</button>
+                    <tr>
+                        <td>${user.user_id}</td>
+                        <td>${user.username}</td>
+                        <td>${user.full_name}</td>
+                        <td>${user.role_name}</td>
+                        <td>${user.status}</td>
+                        <td>
+                            <button onclick="editUser(${user.user_id})">Edit</button>
 
-${user.status === 'Active'
+                            ${user.status === 'Active'
                         ? `<button onclick="changeStatus(${user.user_id}, 'Inactive')">Deactivate</button>`
                         : `<button onclick="changeStatus(${user.user_id}, 'Active')">Activate</button>`
                     }
-        </td>
-    </tr>
-`;
+                        </td>
+                    </tr>
+                `;
 
                 table.innerHTML += row;
             });
@@ -50,7 +51,8 @@ document.getElementById('userForm').addEventListener('submit', (event) => {
         password: prompt('Enter a password for this user:'),
         full_name: document.getElementById('full_name').value,
         role_id: document.getElementById('role_id').value,
-        status: document.getElementById('status').value
+        status: document.getElementById('status').value,
+        logged_in_user_id: 1
     };
 
     if (!user.password) {
@@ -91,6 +93,7 @@ document.getElementById('userForm').addEventListener('submit', (event) => {
 
 loadUsers();
 
+
 function editUser(id) {
 
     const newName = prompt('Enter new full name:');
@@ -112,7 +115,9 @@ function editUser(id) {
         })
 
     })
+
         .then(response => response.json())
+
         .then(data => {
 
             alert(data.message);
@@ -120,12 +125,15 @@ function editUser(id) {
             loadUsers();
 
         })
+
         .catch(error => {
             console.error('Error:', error);
         });
 }
 
+
 function changeStatus(id, status) {
+
     const action = status === 'Active' ? 'activate' : 'deactivate';
 
     if (!confirm(`Are you sure you want to ${action} this user?`)) {
@@ -133,17 +141,27 @@ function changeStatus(id, status) {
     }
 
     fetch(`http://localhost:3000/api/users/${id}`, {
+
         method: 'PUT',
+
         headers: {
             'Content-Type': 'application/json'
         },
+
         body: JSON.stringify({ status: status })
+
     })
+
         .then(response => response.json())
+
         .then(data => {
+
             alert(data.message);
+
             loadUsers();
+
         })
+
         .catch(error => {
             console.error('Error:', error);
         });

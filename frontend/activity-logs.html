@@ -48,15 +48,26 @@
                 }
 
                 logs.forEach(log => {
-                    const description = [
+                    const description = log.description || [
                         log.table_name ? 'Table: ' + log.table_name : '',
                         log.record_id != null
                             ? 'Record ID: ' + log.record_id
                             : ''
                     ].filter(Boolean).join(', ');
 
-                    const date = log.timestamp
-                        ? new Date(log.timestamp).toLocaleString()
+                    const date = log.log_date || log.timestamp;
+
+                    const formattedDate = date
+                        ? new Date(date).toLocaleString('en-US', {
+                            month: '2-digit',
+                            day: '2-digit',
+                            year: 'numeric',
+                            hour: 'numeric',
+                            minute: '2-digit',
+                            second: '2-digit',
+                            hour12: true,
+                            timeZone: 'Asia/Manila'
+                        })
                         : '';
 
                     table.innerHTML += `
@@ -65,7 +76,7 @@
                             <td>${log.username || 'Unknown'}</td>
                             <td>${log.action}</td>
                             <td>${description}</td>
-                            <td>${date}</td>
+                            <td>${formattedDate}</td>
                         </tr>
                     `;
                 });
