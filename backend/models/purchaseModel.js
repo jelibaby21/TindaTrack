@@ -4,14 +4,15 @@ const getAll = (callback) => {
     const sql = `
         SELECT
             pu.purchase_id,
-            pu.supplier_id,
             s.supplier_name,
+            u.full_name,
             pu.purchase_date,
-            pu.total_amount,
-            pu.status
+            pu.total_amount
         FROM purchases pu
         INNER JOIN suppliers s
             ON pu.supplier_id = s.supplier_id
+        INNER JOIN users u
+            ON pu.user_id = u.user_id
         ORDER BY pu.purchase_id DESC
     `;
     db.query(sql, callback);
@@ -20,36 +21,35 @@ const getAll = (callback) => {
 const add = (purchase, callback) => {
     const sql = `
         INSERT INTO purchases
-        (supplier_id, purchase_date, total_amount, status)
+        (supplier_id, user_id, purchase_date, total_amount)
         VALUES (?, ?, ?, ?)
     `;
     db.query(sql, [
         purchase.supplier_id,
+        purchase.user_id,
         purchase.purchase_date,
-        purchase.total_amount,
-        purchase.status || 'Completed'
+        purchase.total_amount
     ], callback);
 };
 
 const update = (id, purchase, callback) => {
     const sql = `
         UPDATE purchases
-        SET supplier_id = ?, purchase_date = ?, total_amount = ?, status = ?
+        SET supplier_id = ?, purchase_date = ?, total_amount = ?
         WHERE purchase_id = ?
     `;
     db.query(sql, [
         purchase.supplier_id,
         purchase.purchase_date,
         purchase.total_amount,
-        purchase.status,
         id
     ], callback);
 };
 
 const remove = (id, callback) => {
     db.query(
-        'UPDATE purchases SET status = ? WHERE purchase_id = ?',
-        ['Cancelled', id],
+        'DELETE FROM purchases WHERE purchase_id = ?',
+        [id],
         callback
     );
 };
@@ -59,16 +59,17 @@ const report = (callback) => {
         SELECT
             pu.purchase_id,
             s.supplier_name,
+            u.full_name,
             pu.purchase_date,
-            pu.total_amount,
-            pu.status
+            pu.total_amount
         FROM purchases pu
-        INNER JOINs suppliers s
+        INNER JOIN suppliers s
             ON pu.supplier_id = s.supplier_id
+        INNER JOIN users u
+            ON pu.user_id = u.user_id
         ORDER BY pu.purchase_id DESC
     `;
     db.query(sql, callback);
 };
 
 module.exports = { getAll, add, update, remove, report };
- 

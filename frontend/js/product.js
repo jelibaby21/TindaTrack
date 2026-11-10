@@ -1,11 +1,32 @@
 const API = 'http://localhost:3000/api/products';
 
 function loadProducts() {
+    const table = document.getElementById('productTable');
+
+    table.innerHTML = `
+        <tr><td colspan="7">Loading products...</td></tr>
+    `;
+
     fetch(API)
-        .then(response => response.json())
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('HTTP Error: ' + response.status);
+            }
+            return response.json();
+        })
         .then(products => {
-            const table = document.getElementById('productTable');
             table.innerHTML = '';
+
+            if (!Array.isArray(products)) {
+                throw new Error('API did not return a product array');
+            }
+
+            if (products.length === 0) {
+                table.innerHTML = `
+                    <tr><td colspan="7">No products found.</td></tr>
+                `;
+                return;
+            }
 
             products.forEach(p => {
                 table.innerHTML += `
@@ -14,7 +35,7 @@ function loadProducts() {
                         <td>${p.product_name}</td>
                         <td>${p.category_name || ''}</td>
                         <td>${p.unit_name || ''}</td>
-                        <td>${p.price}</td>
+                        <td>${p.price || p.selling_price || '0.00'}</td>
                         <td>${p.status}</td>
                         <td>
                             <button onclick="editProduct(${p.product_id})">Edit</button>
@@ -24,7 +45,15 @@ function loadProducts() {
                 `;
             });
         })
-        .catch(error => console.error('Error:', error));
+        .catch(error => {
+            console.error('PRODUCTS ERROR:', error);
+
+            table.innerHTML = `
+                <tr>
+                    <td colspan="7">Error loading products. Check Console.</td>
+                </tr>
+            `;
+        });
 }
 
 document.getElementById('productForm').addEventListener('submit', event => {
@@ -49,7 +78,7 @@ document.getElementById('productForm').addEventListener('submit', event => {
         document.getElementById('productForm').reset();
         loadProducts();
     })
-    .catch(error => console.error('Error:', error));
+    .catch(error => console.error('ADD PRODUCT ERROR:', error));
 });
 
 function editProduct(id) {
