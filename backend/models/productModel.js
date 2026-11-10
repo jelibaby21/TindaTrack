@@ -7,7 +7,7 @@ const getAll = (callback) => {
             p.product_name,
             c.category_name,
             u.unit_name,
-            p.price,
+            p.selling_price AS price,
             p.status
         FROM products p
         LEFT JOIN categories c ON p.category_id = c.category_id
@@ -20,7 +20,7 @@ const getAll = (callback) => {
 const add = (product, callback) => {
     const sql = `
         INSERT INTO products
-        (product_name, category_id, unit_id, price, status)
+        (product_name, category_id, unit_id, selling_price, status)
         VALUES (?, ?, ?, ?, ?)
     `;
     db.query(sql, [
@@ -35,7 +35,7 @@ const add = (product, callback) => {
 const update = (id, product, callback) => {
     const sql = `
         UPDATE products
-        SET product_name = ?, category_id = ?, unit_id = ?, price = ?, status = ?
+        SET product_name = ?, category_id = ?, unit_id = ?, selling_price = ?, status = ?
         WHERE product_id = ?
     `;
     db.query(sql, [
@@ -60,7 +60,7 @@ const report = (callback) => {
     const sql = `
         SELECT p.product_id, p.product_name,
                c.category_name, u.unit_name,
-               p.price, p.status
+              p.selling_price AS price, p.status
         FROM products p
         INNER JOIN categories c
             ON p.category_id = c.category_id
