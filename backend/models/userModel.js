@@ -1,3 +1,4 @@
+
 const db = require('../config/db');
 
 const getUsers = (callback) => {
@@ -35,37 +36,39 @@ const addUser = (data, callback) => {
     );
 };
 
+// Updates only the fields sent by the frontend
 const updateUser = (userId, data, callback) => {
-    const sql = `
-        UPDATE users
-        SET username = ?,
-            full_name = ?,
-            role_id = ?,
-            status = ?
-        WHERE user_id = ?
-    `;
+    const allowedFields = [
+        'username',
+        'full_name',
+        'role_id',
+        'status'
+    ];
 
-    db.query(
-        sql,
-        [
-            data.username,
-            data.full_name,
-            data.role_id,
-            data.status,
-            userId
-        ],
-        callback
+    const fields = Object.keys(data).filter(
+        field =>
+            allowedFields.includes(field) &&
+            data[field] !== undefined
     );
-};
 
-const deactivateUser = (userId, callback) => {
+    if (fields.length === 0) {
+        return callback(new Error('No valid fields provided'));
+    }
+
+    const setClause = fields
+        .map(field => `${field} = ?`)
+        .join(', ');
+
+    const values = fields.map(field => data[field]);
+    values.push(userId);
+
     const sql = `
         UPDATE users
-        SET status = 'Inactive'
+        SET ${setClause}
         WHERE user_id = ?
     `;
 
-    db.query(sql, [userId], callback);
+    db.query(sql, values, callback);
 };
 
 
@@ -82,6 +85,7 @@ const loginUser = (username, password, callback) => {
 };
 
 
+
 module.exports = {
     getUsers,
     addUser,
@@ -89,3 +93,4 @@ module.exports = {
     deactivateUser,
     loginUser
 };
+

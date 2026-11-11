@@ -18,9 +18,9 @@ const loadUsers = () => {
                             <button onclick="editUser(${user.user_id})">Edit</button>
 
                             ${user.status === 'Active'
-                                ? `<button onclick="changeStatus(${user.user_id}, 'Inactive')">Deactivate</button>`
-                                : `<button onclick="changeStatus(${user.user_id}, 'Active')">Activate</button>`
-                            }
+                        ? `<button onclick="changeStatus(${user.user_id}, 'Inactive')">Deactivate</button>`
+                        : `<button onclick="changeStatus(${user.user_id}, 'Active')">Activate</button>`
+                    }
                         </td>
                     </tr>
                 `;
@@ -100,10 +100,12 @@ function editUser(id) {
 }
 
 
-function changeStatus(id, status) {
-    const action = status === 'Active' ? 'activate' : 'deactivate';
 
-    if (!confirm(`Are you sure you want to ${action} this user?`)) {
+f
+function changeStatus(id, status) {
+    const newStatus = status;
+
+    if (!confirm(`Are you sure you want to ${newStatus === 'Active' ? 'activate' : 'deactivate'} this user?`)) {
         return;
     }
 
@@ -112,16 +114,12 @@ function changeStatus(id, status) {
         headers: {
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify({
-            status: status
-        })
+        body: JSON.stringify({ status: newStatus })
     })
         .then(response => response.json())
         .then(data => {
             alert(data.message);
             loadUsers();
         })
-        .catch(error => {
-            console.error('Error changing user status:', error);
-        });
+        .catch(error => console.error('Error:', error));
 }
