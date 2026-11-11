@@ -71,8 +71,26 @@ const updateUser = (userId, data, callback) => {
     db.query(sql, values, callback);
 };
 
+
+const loginUser = (username, password, callback) => {
+    const sql = `
+        SELECT user_id, username, full_name, role_id, status
+        FROM users
+        WHERE username = ?
+        AND password = ?
+        AND status = 'Active'
+    `;
+
+    db.query(sql, [username, password], callback);
+};
+
+
+
 module.exports = {
     getUsers,
     addUser,
-    updateUser
+    updateUser,
+    deactivateUser,
+    loginUser
 };
+

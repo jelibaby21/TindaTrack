@@ -24,6 +24,7 @@ const productRoutes = require('./routes/productRoutes');
 const purchaseRoutes = require('./purchaseRoutes');
 
 app.use('/api', userRoutes);
+app.use('/api', require('./routes/loginRoutes'));
 app.use('/api/reports', reportRoutes);
 app.use('/api/inventory', inventoryRoutes);
 app.use('/api/customers', customerRoutes);
