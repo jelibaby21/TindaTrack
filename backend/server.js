@@ -33,7 +33,7 @@ app.use('/api/debts', debtRoutes);
 app.use('/api/activity-logs', activityLogsRoutes);
 app.use('/api/products', productRoutes);
 app.use('/api/purchases', purchaseRoutes);
-
+app.use('/api', require('./routes/lookupRoutes'));
 app.get('/', (req, res) => {
     res.send('Tinda Track Backend is Running!');
 });

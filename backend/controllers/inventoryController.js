@@ -45,8 +45,10 @@ const add = (req, res) => {
     );
 };
 
+
+
 const update = (req, res) => {
-    const { quantity, expiration_date } = req.body;
+    const { quantity } = req.body;
     const id = req.params.id;
 
     if (quantity === undefined || quantity === '' ||
@@ -56,14 +58,10 @@ const update = (req, res) => {
         });
     }
 
-    const status = 'Active';
-
     Inventory.update(
         id,
         {
-            quantity,
-            expiration_date: expiration_date || null,
-            status
+            quantity: Number(quantity)
         },
         (err) => {
             if (err) {
@@ -75,6 +73,8 @@ const update = (req, res) => {
         }
     );
 };
+
+
 
 const remove = (req, res) => {
     Inventory.remove(req.params.id, (err) => {
