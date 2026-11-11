@@ -8,16 +8,34 @@ const getAll = (req, res) => {
 };
 
 const add = (req, res) => {
-    const { product_name, category_id, unit_id, price, status } = req.body;
+    const {
+        product_name,
+        category_id,
+        unit_id,
+        supplier_id,
+        price,
+        status
+    } = req.body;
 
-    if (!product_name || !category_id || !unit_id || price === undefined) {
+    if (!product_name || !category_id || !unit_id || !supplier_id || price === undefined) {
         return res.status(400).json({ message: 'Required fields are missing' });
     }
 
     Product.add(
-        { product_name, category_id, unit_id, price, status: status || 'Active' },
+        {
+            product_name,
+            category_id,
+            unit_id,
+            supplier_id,
+            price,
+            status: status || 'Active'
+        },
         (err, result) => {
-            if (err) return res.status(500).json({ message: 'Database error' });
+            if (err) {
+                console.error('ADD PRODUCT ERROR:', err);
+                return res.status(500).json({ message: 'Database error' });
+            }
+
             res.status(201).json({
                 message: 'Product added successfully',
                 product_id: result.insertId
@@ -25,6 +43,7 @@ const add = (req, res) => {
         }
     );
 };
+
 
 const update = (req, res) => {
     Product.update(req.params.id, req.body, (err, result) => {

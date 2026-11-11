@@ -1,6 +1,7 @@
 
 const API = 'http://localhost:3000/api/inventory';
 
+
 function loadInventory() {
     fetch(API)
         .then(response => response.json())
@@ -9,12 +10,18 @@ function loadInventory() {
             table.innerHTML = '';
 
             items.forEach(i => {
+                let expiration = 'N/A';
+
+                if (i.expiration_date) {
+                    expiration = String(i.expiration_date).split('T')[0];
+                }
+
                 table.innerHTML += `
                     <tr>
                         <td>${i.batch_id}</td>
                         <td>${i.product_name || ''}</td>
                         <td>${i.quantity}</td>
-                        <td>${i.expiration_date ? i.expiration_date.substring(0, 10) : 'N/A'}</td>
+                        <td>${expiration}</td>
                         <td>${i.status}</td>
                         <td>
                             <button onclick="editInventory(${i.batch_id}, ${i.quantity})">Edit</button>
@@ -81,10 +88,9 @@ function editInventory(id, quantity) {
             'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-            quantity: Number(newQty),
-            expiration_date: null,
-            status: Number(newQty) <= 5 ? 'LOW STOCK' : 'Normal'
-        })
+    quantity: Number(newQty),
+    status: Number(newQty) <= 5 ? 'LOW STOCK' : 'Normal'
+})
     })
         .then(async response => {
             const data = await response.json();

@@ -1,36 +1,47 @@
 const db = require('../config/db');
 
+
 const getAll = (callback) => {
     const sql = `
         SELECT
             p.product_id,
             p.product_name,
+            p.category_id,
+            p.unit_id,
+            p.supplier_id,
             c.category_name,
             u.unit_name,
+            s.supplier_name,
             p.selling_price AS price,
             p.status
         FROM products p
         LEFT JOIN categories c ON p.category_id = c.category_id
         LEFT JOIN units u ON p.unit_id = u.unit_id
+        LEFT JOIN suppliers s ON p.supplier_id = s.supplier_id
         ORDER BY p.product_id
     `;
     db.query(sql, callback);
 };
 
+
+
 const add = (product, callback) => {
     const sql = `
         INSERT INTO products
-        (product_name, category_id, unit_id, selling_price, status)
-        VALUES (?, ?, ?, ?, ?)
+        (product_name, category_id, unit_id, supplier_id, selling_price, status)
+        VALUES (?, ?, ?, ?, ?, ?)
     `;
+
     db.query(sql, [
         product.product_name,
         product.category_id,
         product.unit_id,
+        product.supplier_id,
         product.price,
         product.status
     ], callback);
 };
+
 
 const update = (id, product, callback) => {
     const sql = `

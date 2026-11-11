@@ -71,6 +71,15 @@ const updateUser = (userId, data, callback) => {
     db.query(sql, values, callback);
 };
 
+const deactivateUser = (userId, callback) => {
+    const sql = `
+        UPDATE users
+        SET status = 'Inactive'
+        WHERE user_id = ?
+    `;
+
+    db.query(sql, [userId], callback);
+};
 
 const loginUser = (username, password, callback) => {
     const sql = `

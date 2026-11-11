@@ -31,19 +31,21 @@ const add = (item, callback) => {
     ], callback);
 };
 
+
+
 const update = (id, item, callback) => {
     const sql = `
         UPDATE inventory_batches
-        SET quantity = ?, expiration_date = ?, status = ?
+        SET quantity = ?
         WHERE batch_id = ?
     `;
+
     db.query(sql, [
         item.quantity,
-        item.expiration_date,
-        item.status,
         id
     ], callback);
 };
+
 
 const remove = (id, callback) => {
     db.query(
